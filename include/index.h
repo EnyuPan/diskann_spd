@@ -73,6 +73,9 @@ template <typename T, typename TagT = uint32_t, typename LabelT = uint32_t> clas
     // Saves graph, data, metadata and associated tags.
     DISKANN_DLLEXPORT void save(const char *filename, bool compact_before_save = false);
 
+    // Writes the in-memory graph as one directed adjacency-list row per node.
+    DISKANN_DLLEXPORT void save_graph_as_adjacency_list(const std::string &filename) override;
+
     // Load functions
 #ifdef EXEC_ENV_OLS
     DISKANN_DLLEXPORT void load(AlignedFileReader &reader, uint32_t num_threads, uint32_t search_l);

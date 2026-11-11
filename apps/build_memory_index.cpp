@@ -24,7 +24,8 @@ namespace po = boost::program_options;
 
 int main(int argc, char **argv)
 {
-    std::string data_type, dist_fn, data_path, index_path_prefix, label_file, universal_label, label_type;
+    std::string data_type, dist_fn, data_path, index_path_prefix, label_file, universal_label, label_type,
+        graph_output_path;
     uint32_t num_threads, R, L, Lf, build_PQ_bytes;
     float alpha;
     bool use_pq_build, use_opq;
@@ -70,6 +71,9 @@ int main(int argc, char **argv)
                                        program_options_utils::FILTERED_LBUILD);
         optional_configs.add_options()("label_type", po::value<std::string>(&label_type)->default_value("uint"),
                                        program_options_utils::LABEL_TYPE_DESCRIPTION);
+        optional_configs.add_options()("graph_output",
+                                       po::value<std::string>(&graph_output_path)->default_value(""),
+                                       "Optional text file for the in-memory graph adjacency list");
 
         // Merge required and optional parameters
         desc.add(required_configs).add(optional_configs);
@@ -151,6 +155,10 @@ int main(int argc, char **argv)
         auto index_factory = diskann::IndexFactory(config);
         auto index = index_factory.create_instance();
         index->build(data_path, data_num, filter_params);
+        if (!graph_output_path.empty())
+        {
+            index->save_graph_as_adjacency_list(graph_output_path);
+        }
         index->save(index_path_prefix.c_str());
         index.reset();
         return 0;
