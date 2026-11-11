@@ -48,6 +48,11 @@ sudo sh l_BaseKit_p_2022.1.2.146.sh -a --components intel.oneapi.lin.mkl.devel -
 mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j 
 ```
 
+On Linux, use `-DPORTABLE=ON` to build for AVX-capable CPUs without AVX2 or FMA (for example, Intel Sandy Bridge). This also avoids compiling for the build machine's specific CPU:
+```bash
+cmake -DCMAKE_BUILD_TYPE=Release -DPORTABLE=ON ..
+```
+
 ## Windows build:
 
 The Windows version has been tested with Enterprise editions of Visual Studio 2022, 2019 and 2017. It should work with the Community and Professional editions as well without any changes. 
