@@ -3,6 +3,8 @@
 
 #include <omp.h>
 
+#include <fstream>
+#include <stdexcept>
 #include <type_traits>
 
 #include "boost/dynamic_bitset.hpp"
@@ -246,6 +248,38 @@ template <typename T, typename TagT, typename LabelT> size_t Index<T, TagT, Labe
 template <typename T, typename TagT, typename LabelT> size_t Index<T, TagT, LabelT>::save_graph(std::string graph_file)
 {
     return _graph_store->store(graph_file, _nd + _num_frozen_pts, _num_frozen_pts, _start);
+}
+
+template <typename T, typename TagT, typename LabelT>
+void Index<T, TagT, LabelT>::save_graph_as_adjacency_list(const std::string &filename)
+{
+    std::unique_lock<std::shared_timed_mutex> ul(_update_lock);
+    std::unique_lock<std::shared_timed_mutex> cl(_consolidate_lock);
+    std::unique_lock<std::shared_timed_mutex> tl(_tag_lock);
+    std::unique_lock<std::shared_timed_mutex> dl(_delete_lock);
+
+    std::ofstream out(filename, std::ios::out | std::ios::trunc);
+    if (!out)
+    {
+        throw std::runtime_error("Failed to open graph adjacency-list file for writing: " + filename);
+    }
+
+    const size_t num_nodes = _nd + _num_frozen_pts;
+    for (size_t node = 0; node < num_nodes; ++node)
+    {
+        out << node << ':';
+        for (const auto neighbor : _graph_store->get_neighbours(static_cast<location_t>(node)))
+        {
+            out << ' ' << neighbor;
+        }
+        out << '\n';
+    }
+
+    out.flush();
+    if (!out)
+    {
+        throw std::runtime_error("Failed to write graph adjacency-list file: " + filename);
+    }
 }
 
 template <typename T, typename TagT, typename LabelT>

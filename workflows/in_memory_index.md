@@ -16,7 +16,9 @@ The arguments are as follows:
 8. **T (--num_threads)** (default is to get_omp_num_procs()): number of threads used by the index build process. Since the code is highly parallel, the  indexing time improves almost linearly with the number of threads (subject to the cores available on the machine and DRAM bandwidth).
 9. **--build_PQ_bytes** (default is 0): Set to a positive value less than the dimensionality of the data to enable faster index build with PQ based distance comparisons. Defaults to using full precision vectors for distance comparisons.
 10.**--use_opq**: use the flag to use OPQ rather than PQ compression. OPQ is more space efficient for some high dimensional datasets, but also needs a bit more build time.
+11. **--graph_output** (optional): Write the in-memory graph to a readable text file while building. Each line contains a node's internal ID, a colon, and its outgoing neighbor IDs (for example, `0: 3 8 12`). Node IDs are DiskANN's internal graph locations, not external tags.
 
+For example, append `--graph_output data/sift/graph.txt` to the `build_memory_index` command below to export the graph alongside the binary index. The adjacency list is directed; a row is written for every graph node.
 
 To search the generated index, use the `apps/search_memory_index` program:
 ---------------------------------------------------------------------------
