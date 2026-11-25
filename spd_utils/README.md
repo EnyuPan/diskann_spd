@@ -47,6 +47,10 @@ Visualize the adjacency structure of a graph (note this does not reflect the coo
 ```
 python3 visualize_index.py [adjacency list file] [path for output png]
 ```
+If the dimension is 2, you can plot the graph with the points' coordinates:
+```
+python3 visualize_index.py [adjacency list file] [path for output png] --coords_file [coordinates csv file]
+```
 
 Convert a fvecs dataset to csv: (SIFT-small example)
 ```
