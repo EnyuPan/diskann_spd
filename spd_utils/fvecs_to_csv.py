@@ -22,7 +22,11 @@ def fvecs_read(filename, c_contiguous=True):
 parser = argparse.ArgumentParser(description='Convert fvecs to csv')
 parser.add_argument('input_file', type=str, help='Input fvecs file')
 parser.add_argument('output_file', type=str, help='Output csv file')
+parser.add_argument('--round_to', type=int, default=None, help='Round the output to this many decimal places')
 args = parser.parse_args()
 
 fvecs = fvecs_read(args.input_file)
-np.savetxt(args.output_file, fvecs, delimiter=',', fmt='%.2f')
+if args.round_to is not None:
+    np.savetxt(args.output_file, fvecs, delimiter=',', fmt=f'%.{args.round_to}f')
+else:
+    np.savetxt(args.output_file, fvecs, delimiter=',')

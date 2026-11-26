@@ -54,7 +54,7 @@ python3 visualize_index.py [adjacency list file] [path for output png] --coords_
 
 Convert a fvecs dataset to csv: (SIFT-small example)
 ```
-python fvecs_to_csv.py [fvecs file] [path for output csv file]
+python fvecs_to_csv.py [fvecs file] [path for output csv file] --round_to [number of decimal places]
 ```
 The resulting csv contains the coordinates of the data vectors. For example, the first two rows of the SIFT-small dataset:
 ```
